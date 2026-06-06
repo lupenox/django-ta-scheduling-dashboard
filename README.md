@@ -6,13 +6,6 @@ This project began as a university group project and was later refactored into a
 
 ## Screenshots
 
-Add screenshots to the `docs/` folder using these filenames:
-
-- `docs/dashboard.png`
-- `docs/staff.png`
-- `docs/courses.png`
-- `docs/assignments.png`
-
 ### Dashboard
 
 ![Dashboard](docs/dashboard.png)
