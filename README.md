@@ -1,57 +1,81 @@
-# Django Project Zyemlja
+# TA Scheduling Dashboard
 
-## Overview
-**Zyemlja** is a full-stack web application built using **Django**, providing robust functionality including authentication, database management, and comprehensive testing. This project demonstrates strong software engineering practices through collaborative development, modular code structure, and thorough testing procedures.
+A Django-based academic scheduling dashboard for managing teaching assistants, instructors, courses, sections, and TA assignments.
 
-## Key Features
-- **User Authentication:** Secure login and registration system.
-- **Database Management:** Efficiently handles data operations using Django's ORM.
-- **Unit and Acceptance Testing:** Ensures reliability and correctness through automated testing.
-- **Collaborative Development:** Reflects experience working in a team-oriented environment using Git and version control.
+This project began as a university group project and was later refactored into a cleaner portfolio project focused on Django fundamentals, ORM relationships, class-based views, and template rendering.
 
-## Technologies Used
-- **Django** (Python Web Framework)
-- **SQLite** (Database)
-- **Bootstrap & HTML/CSS** (Frontend)
-- **Git & GitHub** (Version Control)
+## Features
 
-## Installation & Setup
-### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
+- Staff management for TAs, instructors, and admins
+- Course management with instructor assignment
+- Section creation during TA assignment
+- TA-to-section assignment workflow
+- Dashboard view for reviewing course, section, instructor, and TA relationships
+- SQLite database support for local development
 
-### Installation
+## Tech Stack
+
+- Python
+- Django
+- SQLite
+- HTML templates
+- Git and GitHub
+
+## Django Concepts Demonstrated
+
+- Django project/app structure
+- Models and database relationships
+- Migrations
+- Class-based views
+- URL routing
+- Template rendering
+- ORM queries with `select_related` and `prefetch_related`
+
+## Getting Started
+
 Clone the repository:
+
 ```bash
-git clone https://github.com/lupenox/Django-Project-Zyemlja.git
-cd Django-Project-Zyemlja
+git clone https://github.com/lupenox/django-ta-scheduling-dashboard.git
+cd django-ta-scheduling-dashboard
 ```
 
-Install required packages:
+Create and activate a virtual environment:
+
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
 ```
 
-### Running the Project
+Install dependencies:
+
+```bash
+pip install django
+```
+
+Run migrations:
+
 ```bash
 python manage.py migrate
+```
+
+Start the development server:
+
+```bash
 python manage.py runserver
 ```
-Visit `http://127.0.0.1:8000` in your web browser.
 
-## Contributions by Logan Lapierre
-- Implemented **unit and acceptance tests**.
-- Developed core **authentication** and **database management** modules.
-- Enhanced **code modularity** and project structure for maintainability.
+Open the app at:
 
-## Future Improvements
-- Enhance UI/UX design.
-- Integrate additional security measures.
-- Deploy application to cloud hosting.
+```text
+http://127.0.0.1:8000/
+```
+
+## Project Status
+
+This repository is being actively refactored from an older student group project into a cleaner Django portfolio application. Current work focuses on stabilizing the app, improving the data model, and making the scheduling workflow easier to understand.
 
 ## Author
-**Logan Lapierre**  
-[GitHub](https://github.com/lupenox) | [LinkedIn](https://linkedin.com/in/logan-lapierre)
 
-## License
-MIT License – Feel free to use and modify the project.
+Logan Lapierre  
+GitHub: https://github.com/lupenox
