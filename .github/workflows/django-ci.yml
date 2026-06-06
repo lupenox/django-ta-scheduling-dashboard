@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Ruff
         run: |
-          ruff check manage.py zyemlja project_app --exclude "project_app/VIEWS WIPS" --exclude "project_app/classes"
+          ruff check manage.py zyemlja project_app
 
       - name: Run Django tests
         run: |
