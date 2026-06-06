@@ -1,132 +1,27 @@
-<!-- ta_assign_form.html -->
 <!DOCTYPE html>
-<html lang="">
-
-<style>
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: auto;
-    width: 60%;
-    border: 3px solid #000000;
-    padding: 10px;
-}
-
-.navbar a {
-  float: left;
-  font-size: 16px;
-  color: #676565;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th, td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
-}
-
-</style>
-
-<head>
-    <title>Assign TA</title>
-</head>
+<html lang="en">
+<head><meta charset="UTF-8"><title>TA Assignments</title></head>
 <body>
-    <a href="{% url 'logout' %}">Logout</a>
-    
-    {% if user.accountType == AccountType.admin %}
-        <a href="{% url 'AdminDashboard' %}">Back</a>
-    {% elif user.accountType == AccountType.instructor %}
-        <a href="{% url 'InstructorDashboard' %}">Back</a>
-    {% else %}
-        <a href="{% url 'TaDashboard' %}">Back</a>
-    {% endif %}
-
-    <h1>Assign TA to Course and/or Section</h1>
-    <form method="post">
-    {% csrf_token %}
-    <table>
-        <tr>
-            <th>
-                <label for="TASelect"> TA </label><br>
-                <select id="TASelect" name="TASelect" required>
-                    <option value="" selected disabled hidden>Select an Option</option>
-                    {% for TA in TAs %}
-                        <option value="{{ TA.username }}">{{ TA.username }}</option>
-                    {% empty %}
-                        <a> No TAs found </a>
-                    {% endfor %}
-                </select>
-            </th>
-            <th>
-                <label for="CourseSelect"> Course Select </label><br>
-                <select id="CourseSelect" name="CourseSelect" required>
-                    <option value="" selected disabled hidden>Select an Option</option>
-                    {% for course in courses %}
-                        <option value="{{ course.name }}">{{ course.name }}</option>
-                    {% empty %}
-                        <a> No Courses found </a>
-                    {% endfor %}
-                </select>
-            </th>
-            <th>
-                <label for="section_number"> Section Number Select </label><br>
-                <input type="number" name="lab_section" placeholder="Enter Section Number" required>
-            </th>
-        </tr>
-    </table>
-    <br>
-    <table>
-        <input type="submit" value="Assign">
-    </table>
+<h1>TA Assignments</h1>
+<p><a href="{% url 'dashboard' %}">Dashboard</a> | <a href="{% url 'user-management' %}">Staff</a> | <a href="{% url 'course-management' %}">Courses</a></p>
+<hr>
+{% if message %}<p>{{ message }}</p>{% endif %}
+<h2>Assign TA to Section</h2>
+<form method="post" action="{% url 'ta-assignments' %}">
+{% csrf_token %}
+<p>TA: <select name="TASelect" required><option value="">Select TA</option>{% for TA in TAs %}<option value="{{ TA.username }}">{{ TA.username }}</option>{% endfor %}</select></p>
+<p>Course: <select name="CourseSelect" required><option value="">Select course</option>{% for course in courses %}<option value="{{ course.name }}">{{ course.name }}</option>{% endfor %}</select></p>
+<p>Section Number: <input type="text" name="lab_section" required></p>
+<input type="submit" value="Assign TA">
 </form>
-
-<br><br><br><br>
-
-
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Instructor</th>
-            <th>Sections</th>
-            <th>TAs</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for course in courses %}
-        <tr>
-            <td>{{ course.name }}</td>
-            <td>{{ course.instructor.username }}</td>
-
-            <td>
-{#                {{ course.sections }}#}
-                {% for section in sections %}
-                    {% if section.course == course %}
-                        {{ section.name }}
-                    {% endif %}
-                {% endfor %}
-            </td>
-            <td>
-{#                {{ course.sections }}#}
-                {% for TA in TAs %}
-                    {{ TA.username }}
-                {% endfor %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+<h2>Current Sections</h2>
+<table border="1" cellpadding="8">
+<tr><th>Course</th><th>Section</th><th>Assigned TA</th></tr>
+{% for section in sections %}
+<tr><td>{% if section.course %}{{ section.course.name }}{% else %}Unassigned{% endif %}</td><td>{{ section.number }}</td><td>{% if section.ta %}{{ section.ta.username }}{% else %}No TA{% endif %}</td></tr>
+{% empty %}
+<tr><td colspan="3">No sections assigned yet.</td></tr>
+{% endfor %}
 </table>
 </body>
-
-
 </html>
