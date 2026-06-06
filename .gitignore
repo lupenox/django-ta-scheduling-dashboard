@@ -7,3 +7,6 @@ db.sqlite3
 .DS_Store
 .pytest_cache/
 .ruff_cache/
+files.txt
+tracked_cleanup_candidates.txt
+EOF
