@@ -1,1 +1,23 @@
-<!DOCTYPE html><html><body><h1>TA Scheduling Dashboard</h1><p>Dashboard placeholder during refactor.</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>TA Scheduling Dashboard</title></head>
+<body>
+<h1>TA Scheduling Dashboard</h1>
+<p><a href="{% url 'user-management' %}">Staff</a> | <a href="{% url 'course-management' %}">Courses</a> | <a href="{% url 'ta-assignments' %}">TA Assignments</a> | <a href="{% url 'contact-info' %}">Contact Info</a></p>
+<hr>
+<h2>Courses</h2>
+<table border="1" cellpadding="8">
+<tr><th>Course</th><th>Instructors</th><th>Sections</th><th>TAs</th></tr>
+{% for course in courses %}
+<tr>
+<td>{{ course.name }}</td>
+<td>{% for instructor in course.instructor.all %}{{ instructor.username }}{% if not forloop.last %}, {% endif %}{% empty %}Unassigned{% endfor %}</td>
+<td>{% for section in course.sections.all %}Section {{ section.number }}{% if not forloop.last %}, {% endif %}{% empty %}No sections{% endfor %}</td>
+<td>{% for ta in course.TAs.all %}{{ ta.username }}{% if not forloop.last %}, {% endif %}{% empty %}No TAs{% endfor %}</td>
+</tr>
+{% empty %}
+<tr><td colspan="4">No courses yet. Add one from the Courses page.</td></tr>
+{% endfor %}
+</table>
+</body>
+</html>
