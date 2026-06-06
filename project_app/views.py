@@ -15,13 +15,13 @@ class LoginView(View):
         return render(request, "login.html")
 
     def post(self, request):
-        # TODO: Replace placeholder behavior with real authentication logic.
+        # Demo entry point while the legacy app is being refactored.
         return redirect("dashboard")
 
 
 class DashboardView(View):
     def get(self, request):
-        courses = Course.objects.prefetch_related("TAs", "sections", "instructor").all()
+        courses = Course.objects.prefetch_related("TAs", "sections", "instructor").all().order_by("name")
         return render(request, "dashboard.html", {"courses": courses})
 
     def post(self, request):
@@ -30,20 +30,70 @@ class DashboardView(View):
 
 class UserManagementView(View):
     def get(self, request):
-        users = User.objects.all().order_by("username")
-        return render(request, "userManagementView.html", {"users": users})
+        return render(request, "userManagementView.html", self._context())
 
     def post(self, request):
-        return redirect("user-management")
+        username = request.POST.get("username", "").strip()
+        account_type = request.POST.get("account_type", AccountType.TA).strip()
+
+        if not username:
+            return render(request, "userManagementView.html", self._context("Staff name is required."))
+
+        if account_type not in AccountType.values:
+            return render(request, "userManagementView.html", self._context("Role must be TA, admin, or instructor."))
+
+        staff_member, created = User.objects.get_or_create(
+            username=username,
+            defaults={"password": "demo-only", "accountType": account_type},
+        )
+
+        if not created and staff_member.accountType != account_type:
+            staff_member.accountType = account_type
+            staff_member.save()
+            message = f"Updated {username}'s role."
+        else:
+            message = f"Added staff member {username}." if created else f"{username} already exists."
+
+        return render(request, "userManagementView.html", self._context(message))
+
+    def _context(self, message=None):
+        context = {
+            "users": User.objects.all().order_by("username"),
+            "account_types": AccountType.choices,
+        }
+        if message:
+            context["message"] = message
+        return context
 
 
 class CourseManagementView(View):
     def get(self, request):
-        courses = Course.objects.all().order_by("name")
-        return render(request, "course_management.html", {"courses": courses})
+        return render(request, "course_management.html", self._context())
 
     def post(self, request):
-        return redirect("course-management")
+        course_name = request.POST.get("course_name", "").strip()
+        instructor_username = request.POST.get("instructor", "").strip()
+
+        if not course_name:
+            return render(request, "course_management.html", self._context("Course name is required."))
+
+        course, created = Course.objects.get_or_create(name=course_name)
+
+        if instructor_username:
+            instructor = get_object_or_404(User, username=instructor_username, accountType=AccountType.INSTRUCTOR)
+            course.instructor.add(instructor)
+
+        message = f"Created course {course.name}." if created else f"Updated course {course.name}."
+        return render(request, "course_management.html", self._context(message))
+
+    def _context(self, message=None):
+        context = {
+            "courses": Course.objects.prefetch_related("instructor").all().order_by("name"),
+            "instructors": User.objects.filter(accountType=AccountType.INSTRUCTOR).order_by("username"),
+        }
+        if message:
+            context["message"] = message
+        return context
 
 
 class InstructorCoursesView(View):
