@@ -1,0 +1,9 @@
+# ignore virtual environment, bytecode, database, environment variables, and cache files
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+.env
+.DS_Store
+.pytest_cache/
+.ruff_cache/
