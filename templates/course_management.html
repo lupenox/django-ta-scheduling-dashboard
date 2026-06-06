@@ -1,1 +1,19 @@
-<!DOCTYPE html><html><body><h1>Course Management</h1><p>Refactor placeholder page.</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Course Management</title></head>
+<body>
+<h1>Course Management</h1>
+<p><a href="{% url 'dashboard' %}">Dashboard</a> | <a href="{% url 'user-management' %}">Staff</a> | <a href="{% url 'ta-assignments' %}">TA Assignments</a></p>
+<hr>
+{% if message %}<p>{{ message }}</p>{% endif %}
+<h2>Create or Update Course</h2>
+<form method="post" action="{% url 'course-management' %}">
+{% csrf_token %}
+<p>Course Name: <input type="text" name="course_name" required></p>
+<p>Instructor: <select name="instructor"><option value="">No instructor</option>{% for instructor in instructors %}<option value="{{ instructor.username }}">{{ instructor.username }}</option>{% endfor %}</select></p>
+<input type="submit" value="Save Course">
+</form>
+<h2>Courses</h2>
+<ul>{% for course in courses %}<li>{{ course.name }} - {% for instructor in course.instructor.all %}{{ instructor.username }}{% if not forloop.last %}, {% endif %}{% empty %}No instructor{% endfor %}</li>{% empty %}<li>No courses found.</li>{% endfor %}</ul>
+</body>
+</html>
